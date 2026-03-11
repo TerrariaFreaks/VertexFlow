@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 function MyGraphs() {
     const [graphs, setGraphs] = useState([])
-    const navigate = useNavigate
+    const navigate = useNavigate()
 
     const fetchGraphs = async () => {
       try {
@@ -24,6 +24,16 @@ function MyGraphs() {
 
     const openGraph = (id) => {
     navigate(`/home/${id}`)
+    }
+
+    const deleteGraph = async (id) => {
+      if (!window.confirm("Delete this graph?")) return;
+      try {
+        await API.delete(`/graphs/delete/${id}`);
+        setGraphs((prev) => prev.filter((graph) => graph._id !== id))
+      } catch (error){
+        console.error("Failed to delete graph", error);
+      }
     }
 
   return (
@@ -56,6 +66,13 @@ function MyGraphs() {
             >
               Open
             </button>
+
+              <button
+                onClick={() => deleteGraph(graph._id)}
+                className="text-red-600 hover:underline pl-65"
+              >
+                Delete
+              </button>
 
           </div>
 
